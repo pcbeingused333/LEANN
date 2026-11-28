@@ -288,3 +288,10 @@ dropped and the wheel floor moved with it.
   hardcoded file, so multi-shard indexes no longer drop matches.
 - Nothing that worked before stops working: an index named `documents` resolves the same
   file as before, and a genuinely missing passages file still raises the same error.
+
+## 2026-11-28: OpenAI provider works with GPT-5 models
+
+- `leann ask --llm openai` with a `gpt-5*` model sent `max_tokens` and `temperature=0.7`,
+  which these reasoning models reject, so the answer was an API error message.
+- `OpenAIChat` now sends them `max_completion_tokens` and `temperature=1.0`, as it already
+  does for the o-series. Other models are unchanged.

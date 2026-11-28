@@ -831,8 +831,8 @@ class OpenAIChat(LLMInterface):
 
         # Handle max_tokens vs max_completion_tokens based on model
         max_tokens = kwargs.get("max_tokens", 1000)
-        if "o3" in self.model or "o4" in self.model or "o1" in self.model:
-            # o-series models use max_completion_tokens
+        if any(name in self.model for name in ("o1", "o3", "o4", "gpt-5")):
+            # o-series and GPT-5 models use max_completion_tokens
             params["max_completion_tokens"] = max_tokens
             params["temperature"] = 1.0
         else:
