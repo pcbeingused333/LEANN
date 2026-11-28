@@ -38,10 +38,10 @@ def ask(self, prompt: str, **kwargs) -> str:
     if thinking_budget:
         options.pop("thinking_budget", None)
         if thinking_budget in ["low", "medium", "high"]:
-            options["reasoning"] = {"effort": thinking_budget, "exclude": False}
+            payload["think"] = thinking_budget
 ```
 
-**API Format**: Uses Ollama's `reasoning` parameter with `effort` and `exclude` fields.
+**API Format**: Uses the top-level `think` field of Ollama's `/api/generate` request, only for supported reasoning models.
 
 #### OpenAI Backend (`packages/leann-core/src/leann/chat.py`)
 

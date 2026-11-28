@@ -509,6 +509,7 @@ class OllamaChat(LLMInterface):
 
         # Handle thinking budget for reasoning models
         options = kwargs.copy()
+        think = None
         thinking_budget = kwargs.get("thinking_budget")
         if thinking_budget:
             # Remove thinking_budget from options as it's not a standard Ollama option
@@ -518,12 +519,11 @@ class OllamaChat(LLMInterface):
                 "gpt-oss:20b",
                 "gpt-oss:120b",
                 "deepseek-r1",
-                "deepseek-coder",
             ]
 
             if thinking_budget in ["low", "medium", "high"]:
                 if any(model in self.model.lower() for model in reasoning_supported_models):
-                    options["reasoning"] = {"effort": thinking_budget, "exclude": False}
+                    think = thinking_budget
                     logger.info(f"Applied reasoning effort={thinking_budget} to model {self.model}")
                 else:
                     logger.warning(
@@ -536,6 +536,9 @@ class OllamaChat(LLMInterface):
             "stream": False,  # Keep it simple for now
             "options": options,
         }
+        if think:
+            # `think` is a top-level request field; Ollama ignores it inside `options`
+            payload["think"] = think
         logger.debug(f"Sending request to Ollama: {payload}")
         try:
             logger.info("Sending request to Ollama and waiting for response...")
